@@ -60,25 +60,31 @@
       }
       if (Array.isArray(data.Search)) {
         for (let movie of data.Search) {
-          let newObject = {};
-          newObject.title = movie.Title;
-          newObject.poster = movie.Poster;
-          newObject.year = movie.Year;
-          newObject.plot = movie.Plot;
-          newObject.id = movie.imdbID;
-          movies.push(newObject);
+          const {
+            Title: title,
+            Poster: poster,
+            Year: year,
+            Plot: plot,
+            imdbID: id
+          } = movie;
+          movies.push({
+            title, poster, year, plot, id
+          });
         }
       }
       renderMovies();
       $('.modal-trigger').click((event) => {
         event.preventDefault();
-        let title = $(event.target).parent().prev().first().text();
+        let title = $(event.target)
+          .parent().prev().first().text();
         let $xhr = $.getJSON(`http://www.omdbapi.com/?apikey=bbeb9642&t=${title}`);
         $xhr.done((data) => {
           if ($xhr.status !== 200) {
             return;
           }
-          $($(event.target).attr('href')).children().first().children().last().text(data.Plot);
+          $($(event.target).attr('href'))
+            .children().first().children()
+            .last().text(data.Plot);
         });
       });
     });
