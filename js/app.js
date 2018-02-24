@@ -1,9 +1,9 @@
-(function() {
+(() => {
   'use strict';
 
   const movies = [];
 
-  const renderMovies = function() {
+  const renderMovies = () => {
     $('#listings').empty();
 
     for (const movie of movies) {
@@ -12,19 +12,13 @@
       const $content = $('<div>').addClass('card-content center');
       const $title = $('<h6>').addClass('card-title truncate');
 
-      $title.attr({
-        'data-position': 'top',
-        'data-tooltip': movie.title
-      });
+      $title.attr({ 'data-position': 'top', 'data-tooltip': movie.title });
 
       $title.tooltip({ delay: 50 }).text(movie.title);
 
       const $poster = $('<img>').addClass('poster');
 
-      $poster.attr({
-        src: movie.poster,
-        alt: `${movie.poster} Poster`
-      });
+      $poster.attr({ src: movie.poster, alt: `${movie.poster} Poster` });
 
       $content.append($title, $poster);
       $card.append($content);
@@ -57,4 +51,34 @@
   };
 
   // ADD YOUR CODE HERE
+  $('.btn-large').click((event) => {
+    event.preventDefault();
+
+    let $xhr = $.getJSON(`https://omdb-api.now.sh/?s=${$('#search').val()}`);
+    $xhr.done((data) => {
+      if ($xhr.status !== 200) {
+        return;
+      }
+
+      console.log(data);
+      if (Array.isArray(data.Search)) {
+        for (let movie of data.Search) {
+          let newObject = {};
+          newObject.title = movie.Title;
+          newObject.poster = movie.Poster;
+          newObject.year = movie.Year;
+          newObject.plot = movie.Plot;
+          movies.push(newObject);
+        }
+      } else {
+        let obj = {};
+        obj.title = data.Title;
+        obj.poster = data.Poster;
+        obj.year = data.Year;
+        obj.plot = data.Plot;
+        movies.push(obj);
+      }
+      renderMovies();
+    });
+  });
 })();
