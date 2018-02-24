@@ -43,7 +43,6 @@
       $modal.append($modalContent);
 
       $col.append($card, $modal);
-
       $('#listings').append($col);
 
       $('.modal-trigger').leanModal();
@@ -59,8 +58,6 @@
       if ($xhr.status !== 200) {
         return;
       }
-
-      console.log(data);
       if (Array.isArray(data.Search)) {
         for (let movie of data.Search) {
           let newObject = {};
@@ -68,17 +65,22 @@
           newObject.poster = movie.Poster;
           newObject.year = movie.Year;
           newObject.plot = movie.Plot;
+          newObject.id = movie.imdbID;
           movies.push(newObject);
         }
-      } else {
-        let obj = {};
-        obj.title = data.Title;
-        obj.poster = data.Poster;
-        obj.year = data.Year;
-        obj.plot = data.Plot;
-        movies.push(obj);
       }
       renderMovies();
+      $('.modal-trigger').click((event) => {
+        event.preventDefault();
+        let title = $(event.target).parent().prev().first().text();
+        let $xhr = $.getJSON(`http://www.omdbapi.com/?apikey=bbeb9642&t=${title}`);
+        $xhr.done((data) => {
+          if ($xhr.status !== 200) {
+            return;
+          }
+          $($(event.target).attr('href')).children().first().children().last().text(data.Plot);
+        });
+      });
     });
   });
 })();
