@@ -53,9 +53,9 @@
   $('.btn-large').click((event) => {
     event.preventDefault();
 
-    let $xhr = $.getJSON(`https://omdb-api.now.sh/?s=${$('#search').val()}`);
-    $xhr.done((data) => {
-      if ($xhr.status !== 200) {
+    let searchMovie = $.getJSON(`https://omdb-api.now.sh/?s=${$('#search').val()}`);
+    searchMovie.done((data) => {
+      if (searchMovie.status !== 200) {
         return;
       }
       if (Array.isArray(data.Search)) {
@@ -70,6 +70,15 @@
           movies.push({
             title, poster, year, plot, id
           });
+          // The poster didn't exist in this URL either
+          // if (poster === 'N/A') {
+          //   let getPoster = $.getJSON(`http://img.omdbapi.com/?i=${id}&apikey=bbeb9642`)
+          //   getPoster.done((data) => {
+          //     if (getPoster.status !== 200) {
+          //       return;
+          //     }
+          //   });
+          // }
         }
       }
       renderMovies();
@@ -77,9 +86,9 @@
         event.preventDefault();
         let title = $(event.target)
           .parent().prev().first().text();
-        let $xhr = $.getJSON(`http://www.omdbapi.com/?apikey=bbeb9642&t=${title}`);
-        $xhr.done((data) => {
-          if ($xhr.status !== 200) {
+        let getSynopsis = $.getJSON(`http://www.omdbapi.com/?apikey=bbeb9642&t=${title}`);
+        getSynopsis.done((data) => {
+          if (getSynopsis.status !== 200) {
             return;
           }
           $($(event.target).attr('href'))
