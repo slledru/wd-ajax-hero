@@ -86,7 +86,7 @@
         event.preventDefault();
         let title = $(event.target)
           .parent().prev().first().text();
-        let getSynopsis = $.getJSON(`http://www.omdbapi.com/?apikey=bbeb9642&t=${title}`);
+        let getSynopsis = $.getJSON(`http://www.omdbapi.com/?apikey=${key}&t=${title}`);
         getSynopsis.done((data) => {
           if (getSynopsis.status !== 200) {
             return;
@@ -98,4 +98,5 @@
       });
     });
   });
+    const googleApiKey = 'AIzaSyBrrC4Fr9eeNnYbxWhpiug3XlOHFhQBdzY';
 })();
